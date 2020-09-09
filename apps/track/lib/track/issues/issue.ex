@@ -18,5 +18,6 @@ defmodule Track.Issues.Issue do
     issue
     |> cast(attrs, [:title, :body, :status])
     |> validate_required([:title, :body, :status])
+    |> validate_inclusion(:status, ~w(opened closed))
   end
 end

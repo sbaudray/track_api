@@ -15,20 +15,20 @@ user = Track.Repo.insert!(%Track.Accounts.User{username: "JC", email: "jean.char
 Track.Repo.insert!(%Track.Issues.Issue{
   title: "Cannot login",
   body: "I cannot login ffs",
-  status: "OPENED",
+  status: "opened",
   author: user
 })
 
 Track.Repo.insert!(%Track.Issues.Issue{
   title: "GraphQL clients are baaad",
   body: "Write one fucker",
-  status: "OPENED",
+  status: "opened",
   author: user
 })
 
 Track.Repo.insert!(%Track.Issues.Issue{
   title: "I can request issues",
   body: "I wanna fetch issues from phoenix api",
-  status: "CLOSED",
+  status: "closed",
   author: user
 })
