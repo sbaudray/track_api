@@ -3,6 +3,8 @@ defmodule TrackWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug TrackWeb.Context
   end
 
   scope "/api" do
@@ -10,7 +12,11 @@ defmodule TrackWeb.Router do
 
     forward "/graphiql", Absinthe.Plug.GraphiQL, schema: TrackWeb.Schema
 
-    forward "/", Absinthe.Plug, schema: TrackWeb.Schema
+    forward "/graphql", Absinthe.Plug, schema: TrackWeb.Schema
+
+    scope "/user", TrackWeb do
+      post "/login", UserController, :login
+    end
   end
 
   # Enables LiveDashboard only for development

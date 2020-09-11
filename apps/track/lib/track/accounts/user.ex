@@ -24,6 +24,7 @@ defmodule Track.Accounts.User do
     user
     |> changeset(attrs)
     |> cast(attrs, [:password])
+    |> validate_required([:password])
     |> put_password_hash()
   end
 

@@ -10,7 +10,12 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-user = Track.Repo.insert!(%Track.Accounts.User{username: "JC", email: "jean.charles@mail.com"})
+{:ok, user} =
+  Track.Accounts.create_user(%{
+    username: "JC",
+    email: "jean.charles@mail.com",
+    password: "carlito"
+  })
 
 Track.Repo.insert!(%Track.Issues.Issue{
   title: "Cannot login",
