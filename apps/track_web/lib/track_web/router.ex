@@ -10,13 +10,13 @@ defmodule TrackWeb.Router do
   scope "/api" do
     pipe_through :api
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: TrackWeb.Schema
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: TrackWeb.Schema,
+      before_send: {__MODULE__, :absinthe_before_send}
 
-    forward "/graphql", Absinthe.Plug, schema: TrackWeb.Schema
-
-    scope "/user", TrackWeb do
-      post "/login", UserController, :login
-    end
+    forward "/", Absinthe.Plug,
+      schema: TrackWeb.Schema,
+      before_send: {__MODULE__, :absinthe_before_send}
   end
 
   # Enables LiveDashboard only for development
@@ -33,5 +33,22 @@ defmodule TrackWeb.Router do
       pipe_through [:fetch_session, :protect_from_forgery]
       live_dashboard "/dashboard", metrics: TrackWeb.Telemetry
     end
+  end
+
+  def absinthe_before_send(conn, %Absinthe.Blueprint{} = blueprint) do
+    cond do
+      user_id = blueprint.execution.context[:login_user_id] ->
+        put_session(conn, :user_id, user_id)
+
+      logout = blueprint.execution.context[:logout] ->
+        conn |> clear_session() |> configure_session(drop: true)
+
+      true ->
+        conn
+    end
+  end
+
+  def absinthe_before_send(conn, _) do
+    conn
   end
 end
