@@ -52,7 +52,8 @@ defmodule TrackWeb.Endpoint do
   plug Corsica,
     origins: "*",
     log: [rejected: :error, invalid: :warn],
-    allow_headers: ["content-type"]
+    allow_headers: ["content-type"],
+    allow_credentials: true
 
   plug TrackWeb.Router
 end

@@ -40,7 +40,7 @@ defmodule TrackWeb.Router do
       user_id = blueprint.execution.context[:login_user_id] ->
         put_session(conn, :user_id, user_id)
 
-      logout = blueprint.execution.context[:logout] ->
+      _logout = blueprint.execution.context[:logout] ->
         conn |> clear_session() |> configure_session(drop: true)
 
       true ->
