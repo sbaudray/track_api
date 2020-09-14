@@ -5,12 +5,19 @@ defmodule TrackWeb.Schema.IssuesTypes do
   node object(:issue) do
     field(:title, non_null(:string))
     field(:body, non_null(:string))
-    field(:status, non_null(:issue_status_type))
+    field(:status, non_null(:issue_status))
 
     field(:author, non_null(:user))
   end
 
-  enum :issue_status_type do
+  input_object(:issue_input) do
+    field(:title, non_null(:string))
+    field(:body, non_null(:string))
+    field(:status, non_null(:issue_status))
+    field(:author_id, non_null(:id))
+  end
+
+  enum :issue_status do
     value(:open, as: "open")
     value(:closed, as: "closed")
   end

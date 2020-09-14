@@ -13,9 +13,12 @@ defmodule Track.Issues do
   end
 
   def create_issue(attrs \\ %{}) do
-    %Issue{}
-    |> Issue.changeset(attrs)
-    |> Repo.insert()
+    {:ok, issue} =
+      %Issue{}
+      |> Issue.changeset(attrs)
+      |> Repo.insert()
+
+    {:ok, Repo.preload(issue, :author)}
   end
 
   def mark_issue_as(id, status) do

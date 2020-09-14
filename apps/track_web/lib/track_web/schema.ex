@@ -2,6 +2,7 @@ defmodule TrackWeb.Schema do
   use Absinthe.Schema
   use Absinthe.Relay.Schema, :modern
   import Absinthe.Schema.Notation
+  alias Absinthe.Relay.Node
   alias TrackWeb.Resolvers
   alias Track.Accounts.User
 
@@ -11,6 +12,7 @@ defmodule TrackWeb.Schema do
   node interface do
     resolve_type(fn
       %Track.Issues.Issue{}, _ -> :issue
+      %Track.Accounts.User{}, _ -> :user
       _, _ -> nil
     end)
   end
@@ -20,6 +22,9 @@ defmodule TrackWeb.Schema do
       resolve(fn
         %{type: :issue, id: id}, _ ->
           TrackWeb.Resolvers.Issues.find(%{id: id})
+
+        %{type: :user, id: id}, _ ->
+          TrackWeb.Resolvers.Accounts.find_user(%{id: id})
       end)
     end
 
@@ -29,7 +34,8 @@ defmodule TrackWeb.Schema do
 
     field :issue, :issue do
       arg(:id, non_null(:id))
-      resolve(parsing_node_ids(&Resolvers.Issues.get_issue/2, id: :issue))
+      middleware(Node.ParseIDs, id: :issue)
+      resolve(&Resolvers.Issues.get_issue/2)
     end
 
     field :me, :me do
@@ -41,14 +47,30 @@ defmodule TrackWeb.Schema do
     payload field(:mark_issue_as) do
       input do
         field(:id, non_null(:id))
-        field(:status, non_null(:issue_status_type))
+        field(:status, non_null(:issue_status))
       end
 
       output do
         field(:issue, :issue)
       end
 
-      resolve(parsing_node_ids(&Resolvers.Issues.mark_issue_as/2, id: :issue))
+      middleware(Node.ParseIDs, id: :issue)
+
+      resolve(&Resolvers.Issues.mark_issue_as/2)
+    end
+
+    payload field(:create_issue) do
+      input do
+        field(:issue, non_null(:issue_input))
+      end
+
+      output do
+        field(:issue, :issue)
+      end
+
+      middleware(Node.ParseIDs, issue: [author_id: :user])
+
+      resolve(&Resolvers.Issues.create_issue/2)
     end
 
     payload field(:login) do
