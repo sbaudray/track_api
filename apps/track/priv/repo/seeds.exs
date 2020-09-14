@@ -20,14 +20,14 @@
 Track.Repo.insert!(%Track.Issues.Issue{
   title: "Cannot login",
   body: "I cannot login ffs",
-  status: "opened",
+  status: "open",
   author: user
 })
 
 Track.Repo.insert!(%Track.Issues.Issue{
   title: "GraphQL clients are baaad",
   body: "Write one fucker",
-  status: "opened",
+  status: "open",
   author: user
 })
 

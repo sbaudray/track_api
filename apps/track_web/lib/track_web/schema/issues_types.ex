@@ -11,7 +11,7 @@ defmodule TrackWeb.Schema.IssuesTypes do
   end
 
   enum :issue_status_type do
-    value(:opened, as: "opened")
+    value(:open, as: "open")
     value(:closed, as: "closed")
   end
 end

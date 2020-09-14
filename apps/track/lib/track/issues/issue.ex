@@ -16,8 +16,8 @@ defmodule Track.Issues.Issue do
   @doc false
   def changeset(%Issue{} = issue, attrs) do
     issue
-    |> cast(attrs, [:title, :body, :status])
-    |> validate_required([:title, :body, :status])
-    |> validate_inclusion(:status, ~w(opened closed))
+    |> cast(attrs, [:title, :body, :status, :author_id])
+    |> validate_required([:title, :body, :status, :author_id])
+    |> validate_inclusion(:status, ~w(open closed))
   end
 end
